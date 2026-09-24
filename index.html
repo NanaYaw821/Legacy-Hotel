@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#9b2c2c" />
+    <meta name="description" content="Welcome to Legacy Hotel - Premium luxury resort, boutique hotel, and business hotel located in Tema Community 11, Opposite PRESEC, Ghana. Book standard, deluxe, executive rooms and presidential suites with world-class hospitality." />
+    <meta name="keywords" content="Legacy Hotel, Tema Hotel, Ghana Hotel, Luxury Hotel Ghana, Business Hotel Tema, Boutique Resort, Presidential Suite Ghana, Legacy Hotel Tema" />
+    <meta property="og:title" content="Legacy Hotel - Luxury Resort & Business Hotel | Tema, Ghana" />
+    <meta property="og:description" content="Experience unparalleled luxury, fine dining, executive conference facilities, and Ghanaian hospitality at Legacy Hotel." />
+    <meta property="og:type" content="website" />
+    <link rel="manifest" href="/manifest.json" />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Legacy Hotel | Luxury Hotel & Resort - Tema, Ghana</title>
+  </head>
+  <body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration failed: ', err));
+        });
+      }
+    </script>
+  </body>
+</html>
