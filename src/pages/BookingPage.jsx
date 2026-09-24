@@ -43,6 +43,7 @@ export const BookingPage = ({ onBookingSuccess }) => {
 
   // ── Print receipt in a fresh blank window (no navbar / footer) ──
   const printReceipt = (confirmation) => {
+    const logoUrl = `${window.location.origin}/legacy_logo.jpg`;
     const w = window.open('', '_blank', 'width=800,height=600');
     if (!w) return;
     w.document.write(`<!DOCTYPE html>
@@ -63,6 +64,15 @@ export const BookingPage = ({ onBookingSuccess }) => {
     .header {
       text-align: center;
       margin-bottom: 32px;
+    }
+    .header img {
+      height: 72px;
+      object-fit: contain;
+      border-radius: 12px;
+      border: 1px solid #e8d5b7;
+      padding: 4px;
+      background: #faf7f5;
+      margin-bottom: 12px;
     }
     .header h1 {
       font-size: 2.2rem;
@@ -87,11 +97,19 @@ export const BookingPage = ({ onBookingSuccess }) => {
     }
     .logo-row {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      gap: 10px;
       margin-bottom: 20px;
       padding-bottom: 16px;
       border-bottom: 1px solid #f3f4f6;
+    }
+    .logo-row img {
+      height: 48px;
+      object-fit: contain;
+      border-radius: 10px;
+      border: 1px solid #e8d5b7;
+      padding: 3px;
+      background: #faf7f5;
     }
     .logo-text {
       font-size: 1.1rem;
@@ -158,6 +176,7 @@ export const BookingPage = ({ onBookingSuccess }) => {
 </head>
 <body>
   <div class="header">
+    <img src="${logoUrl}" alt="Legacy Hotel Logo" />
     <h1>Legacy Hotel!</h1>
     <p>
       Tema Community 11, Opposite PRESEC &nbsp;•&nbsp; 8km from Tema Harbour
@@ -167,6 +186,7 @@ export const BookingPage = ({ onBookingSuccess }) => {
 
   <div class="card">
     <div class="logo-row">
+      <img src="${logoUrl}" alt="Legacy Hotel Logo" />
       <div>
         <div class="logo-text">LEGACY</div>
         <div class="logo-sub">Hotel &amp; Resort</div>
