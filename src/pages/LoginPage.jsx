@@ -39,7 +39,7 @@ export const LoginPage = ({ setActiveTab }) => {
     const cleanUsername = adminUsername.trim();
     const cleanPassword = adminPassword.trim();
 
-    if ((cleanUsername === "Legacy26" || cleanUsername.toLowerCase() === "adofokofikyere@gmail.com") && cleanPassword === "Legacy@2026") {
+    if (cleanUsername && cleanPassword) { // TODO: Replace with real authentication logic
       setAdminSuccess("Access Granted! Redirecting to Executive Admin Dashboard...");
       setTimeout(() => {
         loginAsAdmin();
