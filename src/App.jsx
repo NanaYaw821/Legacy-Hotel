@@ -80,7 +80,7 @@ export function AppContent() {
       case 'account':
         return <CustomerDashboardPage setActiveTab={setActiveTab} setSelectedRoomDetail={setSelectedRoomDetail} />;
       case 'loyalty':
-        return <LoyaltyVIPPage />;
+        return <LoyaltyVIPPage setActiveTab={setActiveTab} />;
       case 'concierge':
         return <ConciergeGuestPage />;
       case 'experiences':
@@ -88,7 +88,7 @@ export function AppContent() {
       case 'cars':
         return <CarRentalPage />;
       case 'admin':
-        return <AdminDashboardPage />;
+        return <AdminDashboardPage setActiveTab={setActiveTab} />;
       default:
         return <HomePage setActiveTab={setActiveTab} setSelectedRoomDetail={setSelectedRoomDetail} />;
     }

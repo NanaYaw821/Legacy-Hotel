@@ -4,16 +4,23 @@ import { HOTEL_INFO } from '../data/hotelData';
 
 export const ContactPage = () => {
   const [form, setForm] = useState({
-    name: "Kwame Boateng",
-    email: "kwame.boateng@example.com",
-    phone: "0505149092",
-    subject: "General Reservation Inquiry",
-    message: "I would like to inquire about group discounts for next month."
+    name: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: ""
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert(`Thank you ${form.name}! Your message has been sent to ${HOTEL_INFO.contacts.email}. Front desk will reach you at ${form.phone}.`);
+    alert(`Thank you ${form.name}! Your message has been sent to ${HOTEL_INFO.contacts.email}. Front desk will reach you shortly.`);
+    setForm({
+      name: "",
+      email: "",
+      phone: "",
+      subject: "",
+      message: ""
+    });
   };
 
   return (
@@ -86,6 +93,7 @@ export const ContactPage = () => {
                 <input
                   type="text"
                   required
+                  placeholder="e.g. Kwame Mensah"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   className="w-full bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-3 rounded-xl border border-slate-200 dark:border-slate-700"
@@ -97,6 +105,7 @@ export const ContactPage = () => {
                 <input
                   type="email"
                   required
+                  placeholder="e.g. name@example.com"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   className="w-full bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-3 rounded-xl border border-slate-200 dark:border-slate-700"
@@ -110,6 +119,7 @@ export const ContactPage = () => {
                 <input
                   type="text"
                   required
+                  placeholder="e.g. 0244123456"
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
                   className="w-full bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-3 rounded-xl border border-slate-200 dark:border-slate-700"
@@ -121,6 +131,7 @@ export const ContactPage = () => {
                 <input
                   type="text"
                   required
+                  placeholder="e.g. Room Inquiry / Group Booking"
                   value={form.subject}
                   onChange={(e) => setForm({ ...form, subject: e.target.value })}
                   className="w-full bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-3 rounded-xl border border-slate-200 dark:border-slate-700"
@@ -133,6 +144,7 @@ export const ContactPage = () => {
               <textarea
                 rows={5}
                 required
+                placeholder="Write your message or inquiry here..."
                 value={form.message}
                 onChange={(e) => setForm({ ...form, message: e.target.value })}
                 className="w-full bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-3 rounded-xl border border-slate-200 dark:border-slate-700"

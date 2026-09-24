@@ -3,7 +3,7 @@ import { Award, Star, Gift, Check, Sparkles, ChevronRight } from 'lucide-react';
 import { LOYALTY_TIERS, MOCK_USER_LOYALTY } from '../data/loyaltyData';
 import { useAuth } from '../context/AuthContext';
 
-export const LoyaltyVIPPage = () => {
+export const LoyaltyVIPPage = ({ setActiveTab }) => {
   const { user } = useAuth();
 
   const handleRedeem = (reward) => {
@@ -27,25 +27,50 @@ export const LoyaltyVIPPage = () => {
       </div>
 
       {/* Member Points Balance Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-sky-950 to-slate-900 border border-slate-800 rounded-3xl p-8 text-white shadow-2xl mb-16 flex flex-col md:flex-row items-center justify-between gap-6">
-        <div>
-          <span className="text-xs font-bold text-amber-400 uppercase tracking-widest block mb-1">
-            Membership Status: {MOCK_USER_LOYALTY.tier}
-          </span>
-          <h2 className="font-serif-luxury text-3xl font-bold">
-            Welcome, {user?.name || 'Valued VIP Member'}
-          </h2>
-          <span className="text-xs text-slate-400 block mt-1">
-            Member ID: {MOCK_USER_LOYALTY.membershipId} • Member Since: {MOCK_USER_LOYALTY.memberSince}
-          </span>
-        </div>
+      {user ? (
+        <div className="bg-gradient-to-r from-slate-900 via-sky-950 to-slate-900 border border-slate-800 rounded-3xl p-8 text-white shadow-2xl mb-16 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <span className="text-xs font-bold text-amber-400 uppercase tracking-widest block mb-1">
+              Membership Status: {user.vipStatus || 'VIP Member'}
+            </span>
+            <h2 className="font-serif-luxury text-3xl font-bold">
+              Welcome, {user.name}
+            </h2>
+            <span className="text-xs text-slate-400 block mt-1">
+              Member ID: {user.id || 'LGC-VIP-001'}
+            </span>
+          </div>
 
-        <div className="text-center md:text-right bg-slate-950/80 p-6 rounded-2xl border border-slate-800 min-w-[220px]">
-          <span className="text-xs text-slate-400 block uppercase">Points Balance</span>
-          <span className="font-serif-luxury font-bold text-4xl text-amber-400">{MOCK_USER_LOYALTY.pointsBalance}</span>
-          <span className="text-[10px] text-sky-400 block mt-1">{MOCK_USER_LOYALTY.nextTierPoints - MOCK_USER_LOYALTY.pointsBalance} pts to Platinum Crest</span>
+          <div className="text-center md:text-right bg-slate-950/80 p-6 rounded-2xl border border-slate-800 min-w-[220px]">
+            <span className="text-xs text-slate-400 block uppercase">Points Balance</span>
+            <span className="font-serif-luxury font-bold text-4xl text-amber-400">{user.loyalty?.pointsBalance || 500}</span>
+            <span className="text-[10px] text-sky-400 block mt-1">Active VIP Points</span>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="bg-gradient-to-r from-slate-900 via-stone-900 to-slate-900 border border-slate-800 rounded-3xl p-8 text-white shadow-2xl mb-16 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <span className="text-xs font-bold text-amber-400 uppercase tracking-widest block mb-1">
+              VIP Club Privileges
+            </span>
+            <h2 className="font-serif-luxury text-2xl md:text-3xl font-bold">
+              Join the Legacy VIP Crest Club
+            </h2>
+            <p className="text-xs text-slate-400 max-w-lg mt-2 leading-relaxed">
+              Log in or create an account to start earning points, complimentary suite upgrades, early check-in, and private dining perks on every booking.
+            </p>
+          </div>
+          <button
+            onClick={() => {
+              if (setActiveTab) setActiveTab('login');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold text-xs shadow-gold shrink-0 transition-all"
+          >
+            Sign In / Register
+          </button>
+        </div>
+      )}
 
       {/* Reward Redemption Cards */}
       <div className="mb-16">

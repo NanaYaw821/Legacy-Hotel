@@ -10,7 +10,7 @@ import { MOCK_GUEST_CONCIERGE_REQUESTS } from '../data/conciergeData';
 import { useCurrency } from '../context/CurrencyContext';
 import { useAuth } from '../context/AuthContext';
 
-export const AdminDashboardPage = () => {
+export const AdminDashboardPage = ({ setActiveTab }) => {
   const { formatPrice } = useCurrency();
   const { isAdmin, logout } = useAuth();
 
@@ -30,16 +30,25 @@ export const AdminDashboardPage = () => {
     : calendarMatrix.filter(c => c.status.toLowerCase() === selectedRoomStatusFilter.toLowerCase());
 
   if (!isAdmin) {
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white">
-      <h1 className="text-4xl font-bold mb-4">Admin Access Required</h1>
-      <p className="mb-6">Please log in with admin credentials.</p>
-      <button onClick={() => { logout(); window.location.reload(); }} className="px-6 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold">
-        Login as Admin
-      </button>
-    </div>
-  );
-}
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[65vh] px-4 text-center animate-fadeIn">
+        <div className="w-16 h-16 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center mb-4">
+          <Lock className="w-8 h-8" />
+        </div>
+        <h1 className="text-3xl font-bold mb-2 text-slate-900 dark:text-white">Admin Access Required</h1>
+        <p className="mb-6 text-xs text-slate-500 max-w-sm">Please log in through the authentication portal with authorized credentials to view and manage hotel operations.</p>
+        <button
+          onClick={() => {
+            if (setActiveTab) setActiveTab('login');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          className="px-6 py-3 rounded-xl bg-[#9b2c2c] hover:bg-[#7f1d1d] text-white font-bold text-xs shadow-md transition-colors"
+        >
+          Go to Admin Login
+        </button>
+      </div>
+    );
+  }
 return (
     <div className="py-8 max-w-7xl mx-auto px-4 animate-fadeIn space-y-8">
       

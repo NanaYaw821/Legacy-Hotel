@@ -7,6 +7,7 @@ import Logo from '../components/common/Logo';
 import { useBooking } from '../context/BookingContext';
 import { useCurrency } from '../context/CurrencyContext';
 import { INITIAL_ROOMS } from '../data/roomsData';
+import { HOTEL_INFO } from '../data/hotelData';
 import { PAYMENT_METHODS, processPayment } from '../services/paymentService';
 import { sendBookingNotifications } from '../services/notificationService';
 
@@ -32,12 +33,12 @@ export const BookingPage = ({ onBookingSuccess }) => {
   const [completedConfirmation, setCompletedConfirmation] = useState(null);
 
   const [guestForm, setGuestForm] = useState({
-    firstName: "Nana",
-    lastName: "Yaw",
-    email: "nanayaw@example.com",
-    phone: "0505149092",
-    specialRequests: "Quiet room away from elevator, extra foam pillows please.",
-    momoNumber: "0505149092"
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    specialRequests: "",
+    momoNumber: ""
   });
 
   const totalGHS = calculateTotal(selectedRoom, selectedAddons);
@@ -243,6 +244,7 @@ export const BookingPage = ({ onBookingSuccess }) => {
                   <input
                     type="text"
                     required
+                    placeholder="e.g. Kwame"
                     value={guestForm.firstName}
                     onChange={(e) => setGuestForm({ ...guestForm, firstName: e.target.value })}
                     className="w-full bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-3 rounded-xl border border-slate-200 dark:border-slate-700"
@@ -254,6 +256,7 @@ export const BookingPage = ({ onBookingSuccess }) => {
                   <input
                     type="text"
                     required
+                    placeholder="e.g. Mensah"
                     value={guestForm.lastName}
                     onChange={(e) => setGuestForm({ ...guestForm, lastName: e.target.value })}
                     className="w-full bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-3 rounded-xl border border-slate-200 dark:border-slate-700"
@@ -267,6 +270,7 @@ export const BookingPage = ({ onBookingSuccess }) => {
                   <input
                     type="email"
                     required
+                    placeholder="e.g. guest@example.com"
                     value={guestForm.email}
                     onChange={(e) => setGuestForm({ ...guestForm, email: e.target.value })}
                     className="w-full bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-3 rounded-xl border border-slate-200 dark:border-slate-700"
@@ -278,6 +282,7 @@ export const BookingPage = ({ onBookingSuccess }) => {
                   <input
                     type="text"
                     required
+                    placeholder="e.g. 0244123456"
                     value={guestForm.phone}
                     onChange={(e) => setGuestForm({ ...guestForm, phone: e.target.value, momoNumber: e.target.value })}
                     className="w-full bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-3 rounded-xl border border-slate-200 dark:border-slate-700"
@@ -289,6 +294,7 @@ export const BookingPage = ({ onBookingSuccess }) => {
                 <label className="text-slate-500 block mb-1">Special Requests & Flight Details</label>
                 <textarea
                   rows={3}
+                  placeholder="Optional: Flight details, pillow preferences, arrival time..."
                   value={guestForm.specialRequests}
                   onChange={(e) => setGuestForm({ ...guestForm, specialRequests: e.target.value })}
                   className="w-full bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-3 rounded-xl border border-slate-200 dark:border-slate-700"
@@ -403,7 +409,7 @@ export const BookingPage = ({ onBookingSuccess }) => {
               <span>Tema Community 11, Opposite PRESEC</span>
               <span>•</span>
               <span>8km from Tema Harbour</span>
-              <span className="flex items-center gap-1 font-semibold">📞 0505149092</span>
+              <span className="flex items-center gap-1 font-semibold">📞 {HOTEL_INFO.contacts.phonePrimary}</span>
             </p>
           </div>
 

@@ -8,18 +8,27 @@ export const EventsPage = () => {
 
   const [selectedSpace, setSelectedSpace] = useState(EVENT_SPACES[0]);
   const [eventForm, setEventForm] = useState({
-    name: "Kwame Boateng",
-    email: "kwame.boateng@example.com",
-    phone: "0505149092",
+    name: "",
+    email: "",
+    phone: "",
     eventType: "Wedding Reception",
-    guestsCount: 150,
-    date: new Date(Date.now() + 86400000 * 30).toISOString().split('T')[0],
-    notes: "Requires stage lighting and buffet catering."
+    guestsCount: 50,
+    date: "",
+    notes: ""
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert(`Event Request Submitted for ${eventForm.eventType} on ${eventForm.date}! Reference: LGC-EVT-${Date.now().toString().slice(-4)}. Our Event Manager will call you at ${eventForm.phone}.`);
+    alert(`Event Request Submitted for ${eventForm.eventType}${eventForm.date ? ` on ${eventForm.date}` : ''}! Reference: LGC-EVT-${Date.now().toString().slice(-4)}. Our Event Manager will call you shortly.`);
+    setEventForm({
+      name: "",
+      email: "",
+      phone: "",
+      eventType: "Wedding Reception",
+      guestsCount: 50,
+      date: "",
+      notes: ""
+    });
   };
 
   return (
@@ -108,6 +117,7 @@ export const EventsPage = () => {
               <input
                 type="text"
                 required
+                placeholder="e.g. Kwame Mensah"
                 value={eventForm.name}
                 onChange={(e) => setEventForm({ ...eventForm, name: e.target.value })}
                 className="w-full bg-slate-950 text-white p-3 rounded-xl border border-slate-700 focus:outline-none focus:border-amber-400"
@@ -119,6 +129,7 @@ export const EventsPage = () => {
               <input
                 type="text"
                 required
+                placeholder="e.g. 0244123456"
                 value={eventForm.phone}
                 onChange={(e) => setEventForm({ ...eventForm, phone: e.target.value })}
                 className="w-full bg-slate-950 text-white p-3 rounded-xl border border-slate-700 focus:outline-none focus:border-amber-400"

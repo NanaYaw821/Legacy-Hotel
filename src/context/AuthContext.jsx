@@ -26,25 +26,69 @@ const MOCK_ADMIN = {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(MOCK_CUSTOMER); // default demo logged in
-  const [favorites, setFavorites] = useState(MOCK_CUSTOMER.favoriteRoomIds);
+  const [user, setUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem('legacy_hotel_auth');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
 
-  const loginAsCustomer = () => {
-    setUser(MOCK_CUSTOMER);
+  const [favorites, setFavorites] = useState(() => {
+    try {
+      const saved = localStorage.getItem('legacy_hotel_favs');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const loginAsCustomer = (customUser) => {
+    const newUser = customUser || {
+      id: "USR-001",
+      name: "Guest",
+      email: "guest@legacyhotel.com",
+      role: "customer",
+      vipStatus: "VIP Member",
+      avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80"
+    };
+    setUser(newUser);
+    try {
+      localStorage.setItem('legacy_hotel_auth', JSON.stringify(newUser));
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const loginAsAdmin = () => {
     setUser(MOCK_ADMIN);
+    try {
+      localStorage.setItem('legacy_hotel_auth', JSON.stringify(MOCK_ADMIN));
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const logout = () => {
     setUser(null);
+    try {
+      localStorage.removeItem('legacy_hotel_auth');
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const toggleFavorite = (roomId) => {
-    setFavorites(prev => 
-      prev.includes(roomId) ? prev.filter(id => id !== roomId) : [...prev, roomId]
-    );
+    setFavorites(prev => {
+      const updated = prev.includes(roomId) ? prev.filter(id => id !== roomId) : [...prev, roomId];
+      try {
+        localStorage.setItem('legacy_hotel_favs', JSON.stringify(updated));
+      } catch (e) {
+        console.error(e);
+      }
+      return updated;
+    });
   };
 
   return (

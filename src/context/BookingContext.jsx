@@ -21,25 +21,17 @@ export const BookingProvider = ({ children }) => {
   });
 
   const [selectedRoom, setSelectedRoom] = useState(INITIAL_ROOMS[1]); // Default Deluxe
-  const [selectedAddons, setSelectedAddons] = useState(["addon-breakfast"]);
+  const [selectedAddons, setSelectedAddons] = useState([]);
   const [isQuickBookingOpen, setIsQuickBookingOpen] = useState(false);
 
-  const [completedBookings, setCompletedBookings] = useState([
-    {
-      referenceNumber: "LGC-2026-9812",
-      room: INITIAL_ROOMS[2], // Executive
-      checkIn: "2026-10-05",
-      checkOut: "2026-10-08",
-      nights: 3,
-      adults: 2,
-      children: 0,
-      addons: ["addon-breakfast", "addon-shuttle"],
-      totalAmountGHS: 4600,
-      paymentMethod: "MTN Mobile Money",
-      paymentStatus: "PAID",
-      createdAt: "2026-09-18"
+  const [completedBookings, setCompletedBookings] = useState(() => {
+    try {
+      const saved = localStorage.getItem('legacy_hotel_bookings');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
     }
-  ]);
+  });
 
   const [currentBookingStep, setCurrentBookingStep] = useState(1); // 1: Search, 2: Room, 3: Addons & Info, 4: Payment, 5: Confirmation
 
@@ -80,7 +72,15 @@ export const BookingProvider = ({ children }) => {
   };
 
   const addBooking = (newBooking) => {
-    setCompletedBookings(prev => [newBooking, ...prev]);
+    setCompletedBookings(prev => {
+      const updated = [newBooking, ...prev];
+      try {
+        localStorage.setItem('legacy_hotel_bookings', JSON.stringify(updated));
+      } catch (e) {
+        console.error(e);
+      }
+      return updated;
+    });
   };
 
   return (

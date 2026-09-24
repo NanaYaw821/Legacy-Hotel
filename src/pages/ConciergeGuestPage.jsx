@@ -3,12 +3,20 @@ import { Shield, Sparkles, Clock, CheckCircle2, AlertCircle, Plus, Send } from '
 import { CONCIERGE_CATEGORIES, MOCK_GUEST_CONCIERGE_REQUESTS } from '../data/conciergeData';
 
 export const ConciergeGuestPage = () => {
-  const [requests, setRequests] = useState(MOCK_GUEST_CONCIERGE_REQUESTS);
+  const [requests, setRequests] = useState(() => {
+    try {
+      const saved = localStorage.getItem('legacy_concierge_requests');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
   const [form, setForm] = useState({
-    guestName: "Kwame Boateng",
-    roomNumber: "301 (Executive Suite)",
-    requestType: "Housekeeping",
-    description: "Requesting extra hypoallergenic memory foam pillows and fresh towels.",
+    guestName: "",
+    roomNumber: "",
+    requestType: "Housekeeping & Towels",
+    description: "",
     priority: "Medium"
   });
 
@@ -26,8 +34,21 @@ export const ConciergeGuestPage = () => {
       createdTime: "Just now",
       updatedTime: "Just now"
     };
-    setRequests([newReq, ...requests]);
+    const updated = [newReq, ...requests];
+    setRequests(updated);
+    try {
+      localStorage.setItem('legacy_concierge_requests', JSON.stringify(updated));
+    } catch (err) {
+      console.error(err);
+    }
     alert(`Concierge Request #${newReq.id} Submitted! Our butler team has been alerted.`);
+    setForm({
+      guestName: "",
+      roomNumber: "",
+      requestType: "Housekeeping & Towels",
+      description: "",
+      priority: "Medium"
+    });
   };
 
   return (
@@ -55,32 +76,38 @@ export const ConciergeGuestPage = () => {
           </h2>
 
           <div className="space-y-4">
-            {requests.map((req) => (
-              <div key={req.id} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-luxury space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono font-bold text-xs text-sky-600 dark:text-sky-400">{req.id}</span>
-                    <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">({req.roomNumber})</span>
+            {requests.length === 0 ? (
+              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 text-center text-slate-500 text-xs">
+                No active concierge requests. Submit a request using the form to notify the front desk and butler team.
+              </div>
+            ) : (
+              requests.map((req) => (
+                <div key={req.id} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-luxury space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono font-bold text-xs text-sky-600 dark:text-sky-400">{req.id}</span>
+                      <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">({req.roomNumber})</span>
+                    </div>
+
+                    <span className={`text-[10px] font-bold px-3 py-1 rounded-full uppercase ${
+                      req.status === 'Completed' ? 'bg-emerald-500/10 text-emerald-500' :
+                      req.status === 'In Progress' ? 'bg-amber-500/10 text-amber-500' :
+                      'bg-sky-500/10 text-sky-500'
+                    }`}>
+                      ● {req.status}
+                    </span>
                   </div>
 
-                  <span className={`text-[10px] font-bold px-3 py-1 rounded-full uppercase ${
-                    req.status === 'Completed' ? 'bg-emerald-500/10 text-emerald-500' :
-                    req.status === 'In Progress' ? 'bg-amber-500/10 text-amber-500' :
-                    'bg-sky-500/10 text-sky-500'
-                  }`}>
-                    ● {req.status}
-                  </span>
-                </div>
+                  <h4 className="font-bold text-sm text-slate-900 dark:text-white">{req.requestType}</h4>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">{req.description}</p>
 
-                <h4 className="font-bold text-sm text-slate-900 dark:text-white">{req.requestType}</h4>
-                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">{req.description}</p>
-
-                <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-[11px] text-slate-400">
-                  <span>Assigned: <strong className="text-slate-700 dark:text-slate-200">{req.assignedStaff}</strong></span>
-                  <span>{req.createdTime}</span>
+                  <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-[11px] text-slate-400">
+                    <span>Assigned: <strong className="text-slate-700 dark:text-slate-200">{req.assignedStaff}</strong></span>
+                    <span>{req.createdTime}</span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
 
@@ -96,6 +123,7 @@ export const ConciergeGuestPage = () => {
               <input
                 type="text"
                 required
+                placeholder="e.g. Kwame Mensah - Room 301"
                 value={form.guestName}
                 onChange={(e) => setForm({ ...form, guestName: e.target.value })}
                 className="w-full bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-3 rounded-xl border border-slate-200 dark:border-slate-700"
@@ -122,6 +150,7 @@ export const ConciergeGuestPage = () => {
               <textarea
                 rows={3}
                 required
+                placeholder="Describe your request (e.g. 2 extra towels, ice bucket, late checkout)..."
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 className="w-full bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-3 rounded-xl border border-slate-200 dark:border-slate-700"

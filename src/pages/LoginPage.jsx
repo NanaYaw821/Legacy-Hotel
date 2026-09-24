@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Lock, ShieldCheck, LayoutDashboard, KeyRound, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { User, Lock, ShieldCheck, LayoutDashboard, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export const LoginPage = ({ setActiveTab }) => {
@@ -8,18 +8,25 @@ export const LoginPage = ({ setActiveTab }) => {
   const [activeTabMode, setActiveTabMode] = useState("admin"); // default to "admin" or "customer"
 
   // Guest login state
-  const [customerEmail, setCustomerEmail] = useState("kwame.boateng@example.com");
-  const [customerPassword, setCustomerPassword] = useState("••••••••");
+  const [customerEmail, setCustomerEmail] = useState("");
+  const [customerPassword, setCustomerPassword] = useState("");
 
-  // Admin login state (Credentials requested: Username: Legacy26 | Password: Legacy@2026)
-  const [adminUsername, setAdminUsername] = useState("Legacy26");
-  const [adminPassword, setAdminPassword] = useState("Legacy@2026");
+  // Admin login state
+  const [adminUsername, setAdminUsername] = useState("");
+  const [adminPassword, setAdminPassword] = useState("");
   const [adminError, setAdminError] = useState("");
   const [adminSuccess, setAdminSuccess] = useState("");
 
   const handleCustomerSubmit = (e) => {
     e.preventDefault();
-    loginAsCustomer();
+    loginAsCustomer({
+      id: `USR-${Math.floor(1000 + Math.random() * 9000)}`,
+      name: customerEmail.split('@')[0] || "Valued Guest",
+      email: customerEmail,
+      phone: "",
+      role: "customer",
+      vipStatus: "Gold VIP"
+    });
     setActiveTab('account');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -29,7 +36,6 @@ export const LoginPage = ({ setActiveTab }) => {
     setAdminError("");
     setAdminSuccess("");
 
-    // Validate Username: Legacy26 and Password: Legacy@2026
     const cleanUsername = adminUsername.trim();
     const cleanPassword = adminPassword.trim();
 
@@ -41,14 +47,8 @@ export const LoginPage = ({ setActiveTab }) => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }, 600);
     } else {
-      setAdminError("Invalid Admin credentials! Required Username: Legacy26 | Password: Legacy@2026");
+      setAdminError("Invalid username or password.");
     }
-  };
-
-  const autofillAdminCredentials = () => {
-    setAdminUsername("Legacy26");
-    setAdminPassword("Legacy@2026");
-    setAdminError("");
   };
 
   return (
@@ -90,19 +90,9 @@ export const LoginPage = ({ setActiveTab }) => {
           </button>
         </div>
 
-        {/* MODE 1: ADMIN LOGIN FORM (Username: Legacy26 | Password: Legacy@2026) */}
+        {/* MODE 1: ADMIN LOGIN FORM */}
         {activeTabMode === 'admin' && (
           <form onSubmit={handleAdminSubmit} className="space-y-4 text-xs animate-fadeIn">
-            
-            {/* Credentials Banner */}
-            <div className="p-3.5 rounded-2xl bg-[#fdf2d6] dark:bg-[#292524] border border-[#c5a880]/50 text-slate-800 dark:text-slate-200 text-[11px] space-y-1">
-              <span className="font-bold text-[#9b2c2c] dark:text-amber-400 block flex items-center gap-1">
-                <KeyRound className="w-3.5 h-3.5" /> Authorized Admin Credentials:
-              </span>
-              <p>• <strong>Username:</strong> <code className="font-mono bg-white dark:bg-[#1c1917] px-1.5 py-0.5 rounded text-[#9b2c2c] dark:text-amber-300">Legacy26</code></p>
-              <p>• <strong>Password:</strong> <code className="font-mono bg-white dark:bg-[#1c1917] px-1.5 py-0.5 rounded text-[#9b2c2c] dark:text-amber-300">Legacy@2026</code></p>
-            </div>
-
             {adminError && (
               <div className="p-3 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/30 flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 shrink-0" />
@@ -122,7 +112,7 @@ export const LoginPage = ({ setActiveTab }) => {
               <input
                 type="text"
                 required
-                placeholder="Enter Legacy26"
+                placeholder="Enter username"
                 value={adminUsername}
                 onChange={(e) => setAdminUsername(e.target.value)}
                 className="w-full bg-white dark:bg-[#292524] text-slate-900 dark:text-white p-3.5 rounded-xl border border-[#f5e8d2] dark:border-[#44403c] focus:outline-none focus:ring-2 focus:ring-[#9b2c2c] font-medium"
@@ -134,7 +124,7 @@ export const LoginPage = ({ setActiveTab }) => {
               <input
                 type="password"
                 required
-                placeholder="Enter Legacy@2026"
+                placeholder="Enter password"
                 value={adminPassword}
                 onChange={(e) => setAdminPassword(e.target.value)}
                 className="w-full bg-white dark:bg-[#292524] text-slate-900 dark:text-white p-3.5 rounded-xl border border-[#f5e8d2] dark:border-[#44403c] focus:outline-none focus:ring-2 focus:ring-[#9b2c2c] font-medium"
@@ -147,14 +137,6 @@ export const LoginPage = ({ setActiveTab }) => {
             >
               <LayoutDashboard className="w-4 h-4" /> LOGIN TO ADMIN DASHBOARD
             </button>
-
-            <button
-              type="button"
-              onClick={autofillAdminCredentials}
-              className="w-full py-2 text-[11px] text-amber-700 dark:text-amber-400 hover:underline font-semibold text-center"
-            >
-              Autofill Credentials (Legacy26 / Legacy@2026)
-            </button>
           </form>
         )}
 
@@ -166,6 +148,7 @@ export const LoginPage = ({ setActiveTab }) => {
               <input
                 type="email"
                 required
+                placeholder="Enter your email address"
                 value={customerEmail}
                 onChange={(e) => setCustomerEmail(e.target.value)}
                 className="w-full bg-white dark:bg-[#292524] text-slate-900 dark:text-white p-3.5 rounded-xl border border-[#f5e8d2] dark:border-[#44403c]"
@@ -177,6 +160,7 @@ export const LoginPage = ({ setActiveTab }) => {
               <input
                 type="password"
                 required
+                placeholder="Enter password"
                 value={customerPassword}
                 onChange={(e) => setCustomerPassword(e.target.value)}
                 className="w-full bg-white dark:bg-[#292524] text-slate-900 dark:text-white p-3.5 rounded-xl border border-[#f5e8d2] dark:border-[#44403c]"

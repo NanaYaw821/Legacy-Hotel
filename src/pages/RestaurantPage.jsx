@@ -13,12 +13,12 @@ export const RestaurantPage = () => {
 
   // Table reservation form state
   const [tableForm, setTableForm] = useState({
-    name: "Kwame Boateng",
-    phone: "0505149092",
+    name: "",
+    phone: "",
     date: new Date().toISOString().split('T')[0],
     time: "19:00",
     guests: 2,
-    notes: "Poolside table preference"
+    notes: ""
   });
 
   const filteredItems = activeCategory === "all"
@@ -54,6 +54,14 @@ export const RestaurantPage = () => {
   const handleTableSubmit = (e) => {
     e.preventDefault();
     alert(`Table Reservation Confirmed for ${tableForm.name} on ${tableForm.date} at ${tableForm.time} for ${tableForm.guests} guests! Reference: LGC-TBL-${Date.now().toString().slice(-4)}`);
+    setTableForm({
+      name: "",
+      phone: "",
+      date: new Date().toISOString().split('T')[0],
+      time: "19:00",
+      guests: 2,
+      notes: ""
+    });
     setIsTableModalOpen(false);
   };
 
@@ -179,6 +187,7 @@ export const RestaurantPage = () => {
                 <input
                   type="text"
                   required
+                  placeholder="e.g. Kwame Mensah"
                   value={tableForm.name}
                   onChange={(e) => setTableForm({ ...tableForm, name: e.target.value })}
                   className="w-full bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-3 rounded-xl border border-slate-200 dark:border-slate-700"
@@ -190,6 +199,7 @@ export const RestaurantPage = () => {
                 <input
                   type="text"
                   required
+                  placeholder="e.g. 0244123456"
                   value={tableForm.phone}
                   onChange={(e) => setTableForm({ ...tableForm, phone: e.target.value })}
                   className="w-full bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-3 rounded-xl border border-slate-200 dark:border-slate-700"

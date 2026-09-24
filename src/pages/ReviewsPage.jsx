@@ -5,12 +5,12 @@ import { HOTEL_REVIEWS } from '../data/reviewsData';
 export const ReviewsPage = () => {
   const [reviewsList, setReviewsList] = useState(HOTEL_REVIEWS);
   const [form, setForm] = useState({
-    author: "Kwame Mensah",
-    location: "Accra, Ghana",
+    author: "",
+    location: "",
     rating: 5,
     roomType: "Executive Suite",
-    title: "Outstanding Stay!",
-    comment: "The staff went above and beyond for our anniversary stay. The food at Legacy Grill was fantastic."
+    title: "",
+    comment: ""
   });
 
   const handleSubmit = (e) => {
@@ -18,7 +18,7 @@ export const ReviewsPage = () => {
     const newRev = {
       id: `rev-${Date.now()}`,
       author: form.author,
-      location: form.location,
+      location: form.location || "Ghana",
       avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80",
       rating: Number(form.rating),
       date: "Just now",
@@ -31,6 +31,14 @@ export const ReviewsPage = () => {
     };
     setReviewsList([newRev, ...reviewsList]);
     alert("Thank you! Your guest review has been submitted for verification.");
+    setForm({
+      author: "",
+      location: "",
+      rating: 5,
+      roomType: "Executive Suite",
+      title: "",
+      comment: ""
+    });
   };
 
   return (
@@ -124,6 +132,7 @@ export const ReviewsPage = () => {
               <input
                 type="text"
                 required
+                placeholder="e.g. Kwame Mensah"
                 value={form.author}
                 onChange={(e) => setForm({ ...form, author: e.target.value })}
                 className="w-full bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-3 rounded-xl border border-slate-200 dark:border-slate-700"
@@ -148,6 +157,7 @@ export const ReviewsPage = () => {
               <input
                 type="text"
                 required
+                placeholder="e.g. Exceptional Stay & Beautiful Ambience"
                 value={form.title}
                 onChange={(e) => setForm({ ...form, title: e.target.value })}
                 className="w-full bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-3 rounded-xl border border-slate-200 dark:border-slate-700"
@@ -159,6 +169,7 @@ export const ReviewsPage = () => {
               <textarea
                 rows={4}
                 required
+                placeholder="Share your experience at Legacy Hotel..."
                 value={form.comment}
                 onChange={(e) => setForm({ ...form, comment: e.target.value })}
                 className="w-full bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white p-3 rounded-xl border border-slate-200 dark:border-slate-700"
