@@ -41,6 +41,181 @@ export const BookingPage = ({ onBookingSuccess }) => {
     momoNumber: ""
   });
 
+  // ── Print receipt in a fresh blank window (no navbar / footer) ──
+  const printReceipt = (confirmation) => {
+    const w = window.open('', '_blank', 'width=800,height=600');
+    if (!w) return;
+    w.document.write(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Legacy Hotel – Booking Receipt</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #ffffff;
+      color: #111827;
+      padding: 40px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .header h1 {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #111827;
+      margin-bottom: 6px;
+    }
+    .header p {
+      font-size: 0.78rem;
+      color: #6b7280;
+    }
+    .header .phone {
+      color: #dc2626;
+      font-weight: 600;
+    }
+    .card {
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 28px;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .logo-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .logo-text {
+      font-size: 1.1rem;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      color: #9b2c2c;
+    }
+    .logo-sub {
+      font-size: 0.6rem;
+      color: #9ca3af;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .inner {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 24px;
+      background: #f9fafb;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .label {
+      font-size: 11px;
+      color: #6b7280;
+      margin-bottom: 4px;
+    }
+    .value {
+      font-size: 14px;
+      font-weight: 700;
+      color: #111827;
+    }
+    .value.blue { color: #0284c7; }
+    .divider {
+      border: none;
+      border-top: 1px solid #e5e7eb;
+      margin: 0 0 20px;
+    }
+    .bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .total-label {
+      font-size: 11px;
+      color: #6b7280;
+      margin-bottom: 4px;
+      text-align: right;
+    }
+    .total-amount {
+      font-size: 2.6rem;
+      font-weight: 900;
+      color: #d97706;
+      text-align: right;
+    }
+    @media print {
+      body { padding: 20px; }
+      @page { margin: 1cm; size: A4; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Legacy Hotel!</h1>
+    <p>
+      Tema Community 11, Opposite PRESEC &nbsp;•&nbsp; 8km from Tema Harbour
+      &nbsp;&nbsp;<span class="phone">📞 ${HOTEL_INFO.contacts.phonePrimary}</span>
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="logo-row">
+      <div>
+        <div class="logo-text">LEGACY</div>
+        <div class="logo-sub">Hotel &amp; Resort</div>
+      </div>
+    </div>
+
+    <div class="inner">
+      <div class="grid">
+        <div>
+          <div class="label">Guest Name</div>
+          <div class="value">${confirmation.guestDetails.firstName} ${confirmation.guestDetails.lastName}</div>
+        </div>
+        <div>
+          <div class="label">Check-in</div>
+          <div class="value">${confirmation.checkIn}</div>
+        </div>
+        <div>
+          <div class="label">Check-out</div>
+          <div class="value">${confirmation.checkOut}</div>
+        </div>
+        <div>
+          <div class="label">Room Booked</div>
+          <div class="value blue">${confirmation.room.name}</div>
+        </div>
+      </div>
+
+      <hr class="divider"/>
+
+      <div class="bottom">
+        <div>
+          <div class="label">Payment Method</div>
+          <div class="value" style="text-transform:capitalize">${confirmation.paymentMethod}</div>
+        </div>
+        <div>
+          <div class="total-label">Total Amount Paid</div>
+          <div class="total-amount">GH¢ ${Number(confirmation.totalAmountGHS).toLocaleString()}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.onload = function() { window.print(); window.onafterprint = function() { window.close(); }; }
+  </script>
+</body>
+</html>`);
+    w.document.close();
+  };
+
   const totalGHS = calculateTotal(selectedRoom, selectedAddons);
 
   const handleCompleteBooking = async () => {
@@ -392,108 +567,34 @@ export const BookingPage = ({ onBookingSuccess }) => {
 
       {/* STEP 4: Successful Confirmation & Receipt */}
       {step === 4 && completedConfirmation && (
-        <>
-          {/* ── visible on screen only ── */}
-          <div className="print-hide bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-10 shadow-xl space-y-4 animate-fadeIn">
-            <div className="text-center max-w-xl mx-auto space-y-2">
-              <div className="w-14 h-14 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center mx-auto text-slate-400 text-xl font-light shadow-sm">
-                ✓
-              </div>
-              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-500 uppercase tracking-widest block">
-                RESERVATION CONFIRMED
-              </span>
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-10 shadow-xl space-y-8 animate-fadeIn">
+
+          {/* Header */}
+          <div className="text-center max-w-xl mx-auto space-y-2">
+            <div className="w-14 h-14 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center mx-auto text-slate-400 text-xl font-light shadow-sm">
+              ✓
             </div>
+            <span className="text-xs font-bold text-emerald-600 dark:text-emerald-500 uppercase tracking-widest block">
+              RESERVATION CONFIRMED
+            </span>
+            <h2 className="font-serif-luxury text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">
+              Thank You for Choosing Legacy Hotel!
+            </h2>
+            <p className="text-xs text-[#b89552] dark:text-[#d4af37] font-medium flex items-center justify-center gap-2 flex-wrap pt-1">
+              <span>Tema Community 11, Opposite PRESEC</span>
+              <span>•</span>
+              <span>8km from Tema Harbour</span>
+              <span className="flex items-center gap-1 font-semibold">📞 {HOTEL_INFO.contacts.phonePrimary}</span>
+            </p>
           </div>
 
-          {/* ── receipt root — hidden on screen, shown when printing ── */}
-          <div className="print-receipt-root" style={{ display: 'none' }}>
-            {/* Hotel header */}
-            <div className="print-receipt-header" style={{ textAlign: 'center', marginBottom: '24px' }}>
-              <h1 style={{ fontSize: '2rem', fontWeight: 900, color: '#111827', margin: '0 0 6px' }}>Legacy Hotel!</h1>
-              <p style={{ fontSize: '0.8rem', color: '#6b7280' }}>
-                Tema Community 11, Opposite PRESEC &nbsp;•&nbsp; 8km from Tema Harbour &nbsp;📞&nbsp; {HOTEL_INFO.contacts.phonePrimary}
-              </p>
-            </div>
-
-            {/* Receipt card */}
-            <div className="print-receipt-card" style={{
-              border: '1px solid #e5e7eb',
-              borderRadius: '16px',
-              padding: '24px',
-              background: '#ffffff',
-              maxWidth: '700px',
-              margin: '0 auto'
-            }}>
-              {/* Logo row + buttons (buttons hidden via print-hide) */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '12px' }}>
-                <Logo size="sm" />
-                <div className="print-hide" style={{ display: 'flex', gap: '8px' }}>
-                  <button
-                    onClick={() => window.print()}
-                    style={{ padding: '6px 14px', border: '1px solid #e5e7eb', borderRadius: '10px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', background: '#fff' }}
-                  >
-                    <Printer style={{ width: '14px', height: '14px' }} />
-                    Print
-                  </button>
-                  <button
-                    onClick={() => setStep(1)}
-                    style={{ padding: '6px 18px', border: '1px solid #e5e7eb', borderRadius: '10px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', background: '#fff' }}
-                  >
-                    Book
-                  </button>
-                </div>
-              </div>
-
-              {/* Details grid */}
-              <div style={{ border: '1px solid #e5e7eb', borderRadius: '14px', padding: '24px', background: '#f9fafb' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
-                  <div>
-                    <span style={{ color: '#6b7280', fontSize: '11px', display: 'block', marginBottom: '4px' }}>Guest Name</span>
-                    <span style={{ fontWeight: 700, fontSize: '14px', color: '#111827' }}>
-                      {completedConfirmation.guestDetails.firstName} {completedConfirmation.guestDetails.lastName}
-                    </span>
-                  </div>
-                  <div>
-                    <span style={{ color: '#6b7280', fontSize: '11px', display: 'block', marginBottom: '4px' }}>Check-in</span>
-                    <span style={{ fontWeight: 700, fontSize: '14px', color: '#111827' }}>{completedConfirmation.checkIn}</span>
-                  </div>
-                  <div>
-                    <span style={{ color: '#6b7280', fontSize: '11px', display: 'block', marginBottom: '4px' }}>Check-out</span>
-                    <span style={{ fontWeight: 700, fontSize: '14px', color: '#111827' }}>{completedConfirmation.checkOut}</span>
-                  </div>
-                  <div>
-                    <span style={{ color: '#6b7280', fontSize: '11px', display: 'block', marginBottom: '4px' }}>Room Booked</span>
-                    <span style={{ fontWeight: 700, fontSize: '14px', color: '#0284c7' }}>{completedConfirmation.room.name}</span>
-                  </div>
-                </div>
-
-                <div style={{ borderTop: '1px solid #e5e7eb', margin: '20px 0' }} />
-
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                  <div>
-                    <span style={{ color: '#6b7280', fontSize: '11px', display: 'block', marginBottom: '4px' }}>Payment Method</span>
-                    <span style={{ fontWeight: 700, fontSize: '14px', color: '#111827', textTransform: 'capitalize' }}>
-                      {completedConfirmation.paymentMethod}
-                    </span>
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <span style={{ color: '#6b7280', fontSize: '11px', display: 'block', marginBottom: '4px' }}>Total Amount Paid</span>
-                    <span style={{ fontWeight: 900, fontSize: '2.5rem', color: '#d97706' }}>
-                      {formatPrice(completedConfirmation.totalAmountGHS)}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* ── also show receipt card visually on screen below confirm banner ── */}
-          <div className="print-hide bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-6 animate-fadeIn">
+          {/* Receipt Card */}
+          <div className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-6">
             <div className="flex justify-between items-center pb-2">
               <Logo size="sm" />
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => window.print()}
+                  onClick={() => printReceipt(completedConfirmation)}
                   className="px-4 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-medium text-xs hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-1.5 transition-colors"
                 >
                   <Printer className="w-3.5 h-3.5" />
@@ -548,11 +649,13 @@ export const BookingPage = ({ onBookingSuccess }) => {
               </div>
             </div>
           </div>
-        </>
+        </div>
       )}
+
 
     </div>
   );
 };
 
 export default BookingPage;
+
