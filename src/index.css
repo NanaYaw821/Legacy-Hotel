@@ -220,3 +220,53 @@
 ::-webkit-scrollbar-thumb:hover {
   background: var(--chart-1);
 }
+
+/* ========================================
+   PRINT STYLES — Receipt only
+   ======================================== */
+
+/* Hide print-only root on screen */
+.print-receipt-root {
+  display: none;
+}
+
+@media print {
+  /* Hide everything on the page */
+  body > * {
+    display: none !important;
+  }
+
+  /* Hide elements marked print-hide */
+  .print-hide {
+    display: none !important;
+  }
+
+  /* Reveal only the receipt root */
+  .print-receipt-root {
+    display: block !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    z-index: 99999;
+  }
+
+  /* Style the printed page */
+  @page {
+    margin: 1.5cm;
+    size: A4;
+  }
+
+  /* Clean white body */
+  body {
+    background: #ffffff !important;
+    color: #111827 !important;
+  }
+
+  /* Make all colors print-legible */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

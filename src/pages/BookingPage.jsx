@@ -392,41 +392,115 @@ export const BookingPage = ({ onBookingSuccess }) => {
 
       {/* STEP 4: Successful Confirmation & Receipt */}
       {step === 4 && completedConfirmation && (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-10 shadow-xl space-y-8 animate-fadeIn">
-          
-          {/* Header */}
-          <div className="text-center max-w-xl mx-auto space-y-2">
-            <div className="w-14 h-14 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center mx-auto text-slate-400 text-xl font-light shadow-sm">
-              ✓
+        <>
+          {/* ── visible on screen only ── */}
+          <div className="print-hide bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-10 shadow-xl space-y-4 animate-fadeIn">
+            <div className="text-center max-w-xl mx-auto space-y-2">
+              <div className="w-14 h-14 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center mx-auto text-slate-400 text-xl font-light shadow-sm">
+                ✓
+              </div>
+              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-500 uppercase tracking-widest block">
+                RESERVATION CONFIRMED
+              </span>
             </div>
-            <span className="text-xs font-bold text-emerald-600 dark:text-emerald-500 uppercase tracking-widest block">
-              RESERVATION CONFIRMED
-            </span>
-            <h2 className="font-serif-luxury text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">
-              Thank You for Choosing Legacy Hotel!
-            </h2>
-            <p className="text-xs text-[#b89552] dark:text-[#d4af37] font-medium flex items-center justify-center gap-2 flex-wrap pt-1">
-              <span>Tema Community 11, Opposite PRESEC</span>
-              <span>•</span>
-              <span>8km from Tema Harbour</span>
-              <span className="flex items-center gap-1 font-semibold">📞 {HOTEL_INFO.contacts.phonePrimary}</span>
-            </p>
           </div>
 
-          {/* Clean Normal Receipt Card */}
-          <div className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-6">
+          {/* ── receipt root — hidden on screen, shown when printing ── */}
+          <div className="print-receipt-root" style={{ display: 'none' }}>
+            {/* Hotel header */}
+            <div className="print-receipt-header" style={{ textAlign: 'center', marginBottom: '24px' }}>
+              <h1 style={{ fontSize: '2rem', fontWeight: 900, color: '#111827', margin: '0 0 6px' }}>Legacy Hotel!</h1>
+              <p style={{ fontSize: '0.8rem', color: '#6b7280' }}>
+                Tema Community 11, Opposite PRESEC &nbsp;•&nbsp; 8km from Tema Harbour &nbsp;📞&nbsp; {HOTEL_INFO.contacts.phonePrimary}
+              </p>
+            </div>
+
+            {/* Receipt card */}
+            <div className="print-receipt-card" style={{
+              border: '1px solid #e5e7eb',
+              borderRadius: '16px',
+              padding: '24px',
+              background: '#ffffff',
+              maxWidth: '700px',
+              margin: '0 auto'
+            }}>
+              {/* Logo row + buttons (buttons hidden via print-hide) */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '12px' }}>
+                <Logo size="sm" />
+                <div className="print-hide" style={{ display: 'flex', gap: '8px' }}>
+                  <button
+                    onClick={() => window.print()}
+                    style={{ padding: '6px 14px', border: '1px solid #e5e7eb', borderRadius: '10px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', background: '#fff' }}
+                  >
+                    <Printer style={{ width: '14px', height: '14px' }} />
+                    Print
+                  </button>
+                  <button
+                    onClick={() => setStep(1)}
+                    style={{ padding: '6px 18px', border: '1px solid #e5e7eb', borderRadius: '10px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', background: '#fff' }}
+                  >
+                    Book
+                  </button>
+                </div>
+              </div>
+
+              {/* Details grid */}
+              <div style={{ border: '1px solid #e5e7eb', borderRadius: '14px', padding: '24px', background: '#f9fafb' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
+                  <div>
+                    <span style={{ color: '#6b7280', fontSize: '11px', display: 'block', marginBottom: '4px' }}>Guest Name</span>
+                    <span style={{ fontWeight: 700, fontSize: '14px', color: '#111827' }}>
+                      {completedConfirmation.guestDetails.firstName} {completedConfirmation.guestDetails.lastName}
+                    </span>
+                  </div>
+                  <div>
+                    <span style={{ color: '#6b7280', fontSize: '11px', display: 'block', marginBottom: '4px' }}>Check-in</span>
+                    <span style={{ fontWeight: 700, fontSize: '14px', color: '#111827' }}>{completedConfirmation.checkIn}</span>
+                  </div>
+                  <div>
+                    <span style={{ color: '#6b7280', fontSize: '11px', display: 'block', marginBottom: '4px' }}>Check-out</span>
+                    <span style={{ fontWeight: 700, fontSize: '14px', color: '#111827' }}>{completedConfirmation.checkOut}</span>
+                  </div>
+                  <div>
+                    <span style={{ color: '#6b7280', fontSize: '11px', display: 'block', marginBottom: '4px' }}>Room Booked</span>
+                    <span style={{ fontWeight: 700, fontSize: '14px', color: '#0284c7' }}>{completedConfirmation.room.name}</span>
+                  </div>
+                </div>
+
+                <div style={{ borderTop: '1px solid #e5e7eb', margin: '20px 0' }} />
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                  <div>
+                    <span style={{ color: '#6b7280', fontSize: '11px', display: 'block', marginBottom: '4px' }}>Payment Method</span>
+                    <span style={{ fontWeight: 700, fontSize: '14px', color: '#111827', textTransform: 'capitalize' }}>
+                      {completedConfirmation.paymentMethod}
+                    </span>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <span style={{ color: '#6b7280', fontSize: '11px', display: 'block', marginBottom: '4px' }}>Total Amount Paid</span>
+                    <span style={{ fontWeight: 900, fontSize: '2.5rem', color: '#d97706' }}>
+                      {formatPrice(completedConfirmation.totalAmountGHS)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ── also show receipt card visually on screen below confirm banner ── */}
+          <div className="print-hide bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm space-y-6 animate-fadeIn">
             <div className="flex justify-between items-center pb-2">
               <Logo size="sm" />
               <div className="flex items-center gap-2">
-                <button 
-                  onClick={() => window.print()} 
+                <button
+                  onClick={() => window.print()}
                   className="px-4 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-medium text-xs hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-1.5 transition-colors"
                 >
                   <Printer className="w-3.5 h-3.5" />
                   <span>Print</span>
                 </button>
-                <button 
-                  onClick={() => setStep(1)} 
+                <button
+                  onClick={() => setStep(1)}
                   className="px-5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-xs hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                 >
                   Book
@@ -444,21 +518,15 @@ export const BookingPage = ({ onBookingSuccess }) => {
                 </div>
                 <div>
                   <span className="text-slate-500 dark:text-slate-400 text-xs block mb-1">Check-in</span>
-                  <span className="font-bold text-sm text-slate-900 dark:text-white">
-                    {completedConfirmation.checkIn}
-                  </span>
+                  <span className="font-bold text-sm text-slate-900 dark:text-white">{completedConfirmation.checkIn}</span>
                 </div>
                 <div>
                   <span className="text-slate-500 dark:text-slate-400 text-xs block mb-1">Check-out</span>
-                  <span className="font-bold text-sm text-slate-900 dark:text-white">
-                    {completedConfirmation.checkOut}
-                  </span>
+                  <span className="font-bold text-sm text-slate-900 dark:text-white">{completedConfirmation.checkOut}</span>
                 </div>
                 <div>
                   <span className="text-slate-500 dark:text-slate-400 text-xs block mb-1">Room Booked</span>
-                  <span className="font-bold text-sm text-[#0284c7] dark:text-sky-400">
-                    {completedConfirmation.room.name}
-                  </span>
+                  <span className="font-bold text-sm text-[#0284c7] dark:text-sky-400">{completedConfirmation.room.name}</span>
                 </div>
               </div>
 
@@ -480,8 +548,9 @@ export const BookingPage = ({ onBookingSuccess }) => {
               </div>
             </div>
           </div>
-        </div>
+        </>
       )}
+
     </div>
   );
 };
