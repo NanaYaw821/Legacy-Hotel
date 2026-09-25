@@ -220,22 +220,7 @@ export const Navbar = ({ activeTab, setActiveTab }) => {
         </div>
       </div>
 
-      {/* Sub-Navigation Bar (Signature Alisa Style) */}
-      <div className="hidden md:block bg-[#141211] border-t border-[#292524] py-2 px-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-center gap-6 text-xs uppercase tracking-widest font-semibold text-slate-300">
-          {subNavLinks.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => handleNavClick(item.id)}
-              className={`transition-colors hover:text-amber-400 ${
-                activeTab === item.id ? 'text-amber-300 font-bold underline underline-offset-4' : ''
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
-        </div>
-      </div>
+
 
       {/* Mobile App Drawer Navigation */}
       {isMobileMenuOpen && (
